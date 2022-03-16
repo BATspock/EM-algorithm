@@ -1,7 +1,7 @@
 import json
 import requests
 import random
-import numpy as np
+#import numpy as np
 
 url = "https://24zl01u3ff.execute-api.us-west-1.amazonaws.com/beta"
 
@@ -36,6 +36,7 @@ def expectation_step(data, thetaA, thetaB)->(float, float, float, float):
     for i in range(len(data)):
         probA = likelihood(i, data, thetaA)
         probB = likelihood(i, data, thetaB)
+        #normalization for probabilities
         pA = probA/(probA+probB)
         pB = probB/(probA+ probB)
 
@@ -60,15 +61,12 @@ def likelihood(i, data, theta)->float:
 def find_theta(data, iterations = 30)->(float, float):
     thetaA, thetaB = random.random(), random.random()
 
-    for i in range(iterations):
+    for _ in range(iterations):
         headsA, tailsA, headsB, tailsB = expectation_step(data, thetaA, thetaB)
         thetaA, thetaB = maximization_step(headsA, headsB, tailsA, tailsB)
 
-    print(thetaA, thetaB)
+    print("The probalities of heads for coin A: %0.3f , coin B: %0.3f" %(thetaA, thetaB))
     return (thetaA, thetaB)
 
 X = create_dataset(url)
 find_theta(X)
-
-
-
